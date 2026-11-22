@@ -5,5 +5,5 @@ Sword::Sword(const std::string& item_name, const std::string& item_desc, int dmg
 }
 
 std::string Sword::use() {
-    return "Equipped " + get_name() + " (+" + std::to_string(damage) + " DMG)";
+    return "Equipped " + get_name() + " (+" + std::to_string(damage) + " DMG) - "+get_description();
 }

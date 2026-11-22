@@ -1,5 +1,6 @@
 #include "GameUI.h"
 #include <ftxui/dom/elements.hpp>
+#include <string>
 #include "../Engine/Commands.h"
 
 GameUI::GameUI(GameEngine& ge): engine(ge), screen(ftxui::App::Fullscreen()){}
@@ -45,6 +46,11 @@ ftxui::Component GameUI::create_game_view(){
             command_value.erase(last + 1);
         }
         try {
+            if (command_value == "quit" || command_value == "exit") {
+                screen.Exit();
+                return;
+            }
+            
             if (command_value == "w")      logs = "\n--> " + engine.move_player(0, -1);
             else if (command_value == "s") logs = "\n--> " + engine.move_player(0, 1);
             else if (command_value == "a") logs = "\n--> " + engine.move_player(-1, 0);
@@ -70,7 +76,19 @@ ftxui::Component GameUI::create_game_view(){
         auto game_bar = ftxui::vbox({
             ftxui::vbox(std::move(map_rows)) | ftxui::center | ftxui::flex
         }) | ftxui::border | ftxui::flex;
-
+        if(engine.is_in_fight()){
+            game_bar = ftxui::vbox({
+                ftxui::text(engine.get_current_enemy().get_name()+" - "+std::to_string(engine.get_current_enemy().get_hp())+" HP") | ftxui::bold | ftxui::color(ftxui::Color::Blue) | ftxui::center,
+                ftxui::text("vs") | ftxui::bold | ftxui::color(ftxui::Color::Red) | ftxui::center,
+                ftxui::text("Player - "+std::to_string(engine.get_player().get_hp())+" HP") | ftxui::bold | ftxui::color(ftxui::Color::Yellow) | ftxui::center
+            }) | ftxui::center | ftxui::border | ftxui::flex;
+        }
+        if (!engine.get_player().is_alive()) {
+            game_bar = ftxui::vbox({
+                ftxui::text("GAME OVER") | ftxui::bold | ftxui::color(ftxui::Color::Red) | ftxui::center,
+                ftxui::text("Type 'quit' to exit.") | ftxui::center
+            }) | ftxui::center | ftxui::border | ftxui::flex;
+        }
         ftxui::Elements inv_rows;
         inv_rows.push_back(ftxui::text("Inventory:") | ftxui::bold);
         inv_rows.push_back(ftxui::separator());

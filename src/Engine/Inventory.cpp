@@ -22,8 +22,10 @@ std::string Inventory::use_item(int index) {
         remove_item(index);
         return equipped_item->use();
     }
-    if( items[index]->is_potion()){
+    if (items[index]->is_potion()) {
+        std::string msg = items[index]->use();
         remove_item(index);
+        return msg;
     }
     return items[index]->use();
 }

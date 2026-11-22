@@ -30,6 +30,8 @@ src/Engine/Commands.h
 src/Engine/Commands.cpp
 src/Items/Potion.h
 src/Items/Potion.cpp
+src/Engine/Enemy.h
+src/Engine/Enemy.cpp
 )
 
 target_link_libraries(Lerin PRIVATE
