@@ -20,6 +20,16 @@ src/Engine/Level.cpp
 src/Engine/Player.h
 src/UI/GameUI.h
 src/UI/GameUI.cpp
+src/Engine/Inventory.h
+src/Engine/Item.h
+src/Engine/Inventory.cpp
+src/Engine/Item.cpp
+src/Items/Sword.h
+src/Items/Sword.cpp
+src/Engine/Commands.h
+src/Engine/Commands.cpp
+src/Items/Potion.h
+src/Items/Potion.cpp
 )
 
 target_link_libraries(Lerin PRIVATE

@@ -1,5 +1,6 @@
 #include "GameUI.h"
 #include <ftxui/dom/elements.hpp>
+#include "../Engine/Commands.h"
 
 GameUI::GameUI(GameEngine& ge): engine(ge), screen(ftxui::App::Fullscreen()){}
 
@@ -48,7 +49,7 @@ ftxui::Component GameUI::create_game_view(){
             else if (command_value == "s") logs = "\n--> " + engine.move_player(0, 1);
             else if (command_value == "a") logs = "\n--> " + engine.move_player(-1, 0);
             else if (command_value == "d") logs = "\n--> " + engine.move_player(1, 0);
-            else                           logs = "\n--> Unknown command: " + command_value;
+            else                           logs = "\n--> " + Commands::execute(engine, command_value);;
         } catch (const std::exception& e) {
             logs = std::string("\n--> ") + e.what();
         }
@@ -69,9 +70,17 @@ ftxui::Component GameUI::create_game_view(){
         auto game_bar = ftxui::vbox({
             ftxui::vbox(std::move(map_rows)) | ftxui::center | ftxui::flex
         }) | ftxui::border | ftxui::flex;
-        auto inventory_bar = ftxui::vbox({
-            ftxui::text("Inventory:")
-        }) | ftxui::border | size(ftxui::WIDTH,ftxui::EQUAL, 30);
+
+        ftxui::Elements inv_rows;
+        inv_rows.push_back(ftxui::text("Inventory:") | ftxui::bold);
+        inv_rows.push_back(ftxui::separator());
+        const auto& items = engine.get_player().get_inventory().get_items();
+        for (int i = 0; i < static_cast<int>(items.size()); ++i) {
+            inv_rows.push_back(
+                ftxui::text(std::to_string(i + 1) + ". " + items[i]->get_name())
+            );
+        }
+        auto inventory_bar = ftxui::vbox(std::move(inv_rows)) | ftxui::border | size(ftxui::WIDTH,ftxui::EQUAL, 30);
         auto log_bar = ftxui::vbox({
             ftxui::text("LOG:"+logs),
             hbox(ftxui::text("->>"),command_input -> Render())

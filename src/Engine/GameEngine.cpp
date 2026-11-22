@@ -1,8 +1,12 @@
 #include "GameEngine.h"
 #include "Level.h"
+#include "../Items/Sword.h"
+#include "../Items/Potion.h"
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 
 
 GameEngine::GameEngine(){
@@ -10,7 +14,7 @@ GameEngine::GameEngine(){
         "################",
         "#.....#........#",
         "#.....#........#",
-        "#.....##.##....#",
+        "#C....##.##....#",
         "#.........#....#",
         "#.........#...>#",
         "################"
@@ -20,7 +24,7 @@ GameEngine::GameEngine(){
         "################",
         "#...#..........#",
         "#...#..####....#",
-        "#......#..#....#",
+        "#......#CC#....#",
         "###..###..#....#",
         "#.........#...>#",
         "################"
@@ -54,5 +58,24 @@ std::string GameEngine::move_player(int x, int y){
             return "You've reached the end of the dungeon! You won!";
         }
     }
+    if (level.get_tile(player.get_x(), player.get_y()) == 'C') {
+        level.set_tile(player.get_x(), player.get_y(), '.');
+        srand(time(0));
+        int rand_num = rand() % 2;
+        if(rand_num >= 1){
+            auto item = std::make_unique<Sword>("Golden Sword", "Very Sharp", 35);
+            std::string name = item->get_name();
+            player.get_inventory() += std::move(item);
+            return "Opened chest: found "+name;
+        }else{
+            auto item = std::make_unique<Potion>("Potion", "Healing Potion", 20);
+            std::string name = item->get_name();
+            player.get_inventory() += std::move(item);
+            return "Opened chest: found "+name;
+        }      
+    }   
     return "Move made.";
+}
+std::string GameEngine::use_item(int slot) {
+    return player.get_inventory().use_item(slot - 1);
 }
