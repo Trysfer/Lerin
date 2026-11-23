@@ -6,7 +6,7 @@ A fantasy-themed dungeon crawler developed as a university student project. Expl
 * **Movement:** `w` (up), `a` (left), `s` (down), `d` (right)
 * **Combat:** 
   * `attack` — strike the enemy during an encounter (requires an equipped weapon)
-  * `guard` — brace for impact, reducing incoming enemy damage by half for that turn
+  * `guard` — brace for impact, reducing incoming damage by 50%, with a 50% chance to stun the enemy for the current and next turn
   * `wait` — skip your action and pass the turn directly to the enemy
 * **Inventory:** `use <slot>` — equip a weapon (e.g., `use 1`) or drink a potion to restore HP, `drop <slot>` — removes the item from the inventory (e.g., `drop 1`)
 * **Status & System:** `info` (show equipped weapon & player stats), `quit` / `exit` (close the game), `help` (show commands that you can use)
@@ -25,6 +25,7 @@ A fantasy-themed dungeon crawler developed as a university student project. Expl
 * **Operator Overloading:**
   * `Inventory::operator+=` — adds new `std::unique_ptr<Item>` objects into the player's inventory.
   * `Player::operator+=` — applies healing boosts from potions to player HP.
+  * `Player::operator+` — when added to another string it displayes current `Player` health.
 * **Encapsulation & Separation of Concerns:** Logic is decoupled from rendering across `GameEngine`, `Level`, `Player`, `Enemy`, `Inventory`, `Commands`, and `GameUI`.
 * **Exception Handling:** Bounds checking and invalid input validation using `std::out_of_range` and `std::invalid_argument` caught cleanly in the UI command loop.
 
