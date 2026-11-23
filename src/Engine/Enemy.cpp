@@ -7,3 +7,7 @@ void Enemy::take_damage(int dmg) {
         hp = std::max(0, hp - dmg);
     }
 }
+
+void Enemy::set_disable(bool value){
+    disabled_next_turn = value;
+}

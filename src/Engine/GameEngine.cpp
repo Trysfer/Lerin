@@ -37,6 +37,8 @@ GameEngine::GameEngine(){
 
     player.set_position(levels[0].get_start_x(), levels[0].get_start_y());
     player.get_inventory() += std::make_unique<Sword>("Wooden Sword", "Is it a stick?", 15);
+    player.get_inventory() += std::make_unique<Potion>("Potion", "Healing Potion", 20);
+    player.get_inventory() += std::make_unique<Potion>("Potion", "Healing Potion", 20);
 }
 
 const Level& GameEngine::get_current_level() const{
@@ -106,8 +108,8 @@ std::string GameEngine::move_player(int x, int y){
     }
     if(level.get_tile(player.get_x(), player.get_y()) == '.')   {
         srand(time(0));
-        int rand_num = rand() % 10;
-        if(rand_num <= 1){
+        int rand_num = rand() % 20;
+        if(rand_num <= 2){
             int rand_enemy = rand()%4;
             switch (rand_enemy) {
                 case 0:{
@@ -157,13 +159,18 @@ std::string GameEngine::attack_enemy(){
         return "You have defeated a "+current_enemy.get_name();
     }
     msg+= "You have hit a "+current_enemy.get_name()+". ";
-    srand(time(0));
-    int rand_num = rand()%10;
-    if(rand_num <= 5){
-        player.take_damage(current_enemy.get_dmg());
-        msg += current_enemy.get_name()+" has hit you!";
+    if(current_enemy.is_disabled_next_turn() == true){
+        msg += current_enemy.get_name() + " has recovered.";
+        current_enemy.set_disable(false);
     }else{
-        msg+= current_enemy.get_name()+" has missed.";
+        srand(time(0));
+        int rand_num = rand()%10;
+        if(rand_num <= 5){
+            player.take_damage(current_enemy.get_dmg());
+            msg += current_enemy.get_name()+" has hit you!";
+        }else{
+            msg+= current_enemy.get_name()+" has missed.";
+        }
     }
     return msg;
 }
@@ -176,13 +183,18 @@ std::string GameEngine::wait(){
     }
     std::string msg;
     msg+= "You have passed turn to the "+current_enemy.get_name()+". ";
-    srand(time(0));
-    int rand_num = rand()%10;
-    if(rand_num <= 5){
-        player.take_damage(current_enemy.get_dmg());
-        msg += current_enemy.get_name()+" has hit you!";
+    if(current_enemy.is_disabled_next_turn() == true){
+        msg += current_enemy.get_name() + " has recovered.";
+        current_enemy.set_disable(false);
     }else{
-        msg+= current_enemy.get_name()+" has missed.";
+        srand(time(0));
+        int rand_num = rand()%10;
+        if(rand_num <= 5){
+            player.take_damage(current_enemy.get_dmg());
+            msg += current_enemy.get_name()+" has hit you!";
+        }else{
+            msg+= current_enemy.get_name()+" has missed.";
+        }
     }
     return msg;
 }
@@ -195,13 +207,19 @@ std::string GameEngine::guard(){
     }
     std::string msg;
     msg+= "You've chosen to guard against a "+current_enemy.get_name()+". ";
-    srand(time(0));
-    int rand_num = rand()%10;
-    if(rand_num <= 5){
-        player.take_damage(static_cast<int>(current_enemy.get_dmg()/2));
-        msg += current_enemy.get_name()+" has hit you!";
+    if(current_enemy.is_disabled_next_turn() == true){
+        msg += current_enemy.get_name() + " has recovered.";
+        current_enemy.set_disable(false);
     }else{
-        msg+= current_enemy.get_name()+" has missed.";
+        srand(time(0));
+        int rand_num = rand()%10;
+        if(rand_num <= 4){
+            player.take_damage(static_cast<int>(current_enemy.get_dmg()/2));
+            msg += current_enemy.get_name()+" has hit you!";
+        }else{
+            msg+= current_enemy.get_name()+" has missed and is disable for the next turn.";
+            current_enemy.set_disable(true);
+        }
     }
     return msg;
 }
