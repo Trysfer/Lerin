@@ -37,6 +37,7 @@ A fantasy-themed dungeon crawler developed as a university student project. Expl
 * C++17 (or newer) compiler (`g++` / `clang++`)
 * CMake 3.14+
 * FTXUI (fetched automatically via CMake or installed on system)
+* Git (required by CMake `FetchContent` to download FTXUI)
 
 ### Compilation (Linux / macOS)
 ```bash
@@ -44,3 +45,22 @@ mkdir -p build && cd build
 cmake ..
 make
 ./Lerin
+```
+### Compilation (Windows 10/11)
+
+* Windows (PowerShell) Using MinGW-w64 / MSYS2 (g++):
+  ```bash
+  mkdir build
+  cd build
+  cmake -G "MinGW Makefiles" ..
+  cmake --build .
+  .\Lerin.exe
+  ```
+* Using Visual Studio (MSVC):
+  ```bash
+  mkdir build
+  cd build
+  cmake -G "Visual Studio 17 2022" ..
+  cmake --build . --config Release
+  .\Release\Lerin.exe
+  ```
