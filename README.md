@@ -25,9 +25,11 @@ A fantasy-themed dungeon crawler developed as a university student project. Expl
 * **Operator Overloading:**
   * `Inventory::operator+=` — adds new `std::unique_ptr<Item>` objects into the player's inventory.
   * `Player::operator+=` — applies healing boosts from potions to player HP.
-  * `Player::operator+` — when added to another string it displayes current `Player` health.
+  * `Player::operator+` — when added to another string it displays current `Player` health.
 * **Encapsulation & Separation of Concerns:** Logic is decoupled from rendering across `GameEngine`, `Level`, `Player`, `Enemy`, `Inventory`, `Commands`, and `GameUI`.
 * **Exception Handling:** Bounds checking and invalid input validation using `std::out_of_range` and `std::invalid_argument` caught cleanly in the UI command loop.
+
+![UML Class Diagram](uml.png)
 
 ## Build & Run
 
