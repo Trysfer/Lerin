@@ -31,9 +31,50 @@ GameEngine::GameEngine(){
         "################"
     };
 
+    std::vector<std::string> floor3 = {
+        "##########################",
+        "#C.....#CC.......C#......#",
+        "#....#.######.#####..#...#",
+        ".....#...............#...#",
+        "#....###################.#",
+        "#........................#",
+        "#####################>####"
+    };
+
+    std::vector<std::string> floor4 = {
+        "############.#############",
+        "#........................#",
+        "#...###...####..C..###...#",
+        "#...###...############...#",
+        "#...###...##.............#",
+        "#...###...##>#########...#",
+        "#.........##.#.C...C.#...#",
+        "#............#...C...#...#",
+        "#............#.C...C.#...#",
+        "#...C..C.....#...........#",
+        "##########################"
+    };
+
+    std::vector<std::string> floor5 = {
+        "##########################",
+        "#.CC.........#...#...#...#",
+        "#..............#.#.#.#.#.#",
+        "#............###...#...#.#",
+        "############.###########.#",
+        "#............#...........>",
+        "#....###...#.######.######",
+        "#....C##...#......#.#..C.#",
+        "#....#C#...#......#.#....#",
+        "#..........#.............#",
+        "##########################"
+    };
+
 
     levels.emplace_back(floor1,1,1);
     levels.emplace_back(floor2,1,1);
+    levels.emplace_back(floor3,0,3);
+    levels.emplace_back(floor4,12,0);
+    levels.emplace_back(floor5,12,5);
 
     player.set_position(levels[0].get_start_x(), levels[0].get_start_y());
     player.get_inventory() += std::make_unique<Sword>("Wooden Sword", "Is it a stick?", 15);
@@ -100,7 +141,21 @@ std::string GameEngine::move_player(int x, int y){
                 }
             }
         }else{
-            item = std::make_unique<Potion>("Potion", "Healing Potion", 20);
+            int rand_potion = rand() % 2;
+            switch (rand_potion) {
+                case 0:{
+                    item = std::make_unique<Potion>("Potion", "Healing Potion", 20);
+                    break;
+                }
+                case 1:{
+                    item = std::make_unique<Potion>("Large Potion", "Healing Potion (Large)", 50);
+                    break;
+                }
+                default:{
+                    item = std::make_unique<Potion>("Potion", "Healing Potion", 20);
+                    break;
+                }
+            }
         }      
         std::string name = item->get_name();
         player.get_inventory() += std::move(item);

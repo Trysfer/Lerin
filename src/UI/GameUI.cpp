@@ -71,7 +71,16 @@ ftxui::Component GameUI::create_game_view(){
             if (y == engine.get_player().get_y()) {
                 row[engine.get_player().get_x()] = '@';
             }
-            map_rows.push_back(ftxui::text(row));
+            ftxui::Elements row_chars;
+            for (char c : row) {
+                auto cell = ftxui::text(std::string(1, c));
+                if (c == '@')      cell = cell | ftxui::color(ftxui::Color::Green) | ftxui::bold;
+                else if (c == 'C') cell = cell | ftxui::color(ftxui::Color::Yellow) | ftxui::bold;
+                else if (c == '>') cell = cell | ftxui::color(ftxui::Color::Cyan) | ftxui::bold;
+                else if (c == '#') cell = cell | ftxui::color(ftxui::Color::GrayDark);
+                row_chars.push_back(cell);
+            }
+            map_rows.push_back(ftxui::hbox(std::move(row_chars)));
         }
         auto game_bar = ftxui::vbox({
             ftxui::vbox(std::move(map_rows)) | ftxui::center | ftxui::flex
